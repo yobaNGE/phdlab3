@@ -1,26 +1,22 @@
-package com.amongus.phdlab3.entity;
-
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+package com.amongus.phdlab3.dto;
 
 import java.time.Instant;
 import java.util.List;
 
-@Document(collection = "review")
-public class ReviewEntity {
-    @Id
+public class ReviewDTO {
     private String id;
     private String username;
     private String product;
     private int rating;
     private String comment;
     private Instant date;
-    private List<String> tags;
+    private String tags;
 
-    protected ReviewEntity() {
+    protected ReviewDTO() {
     }
 
-    public ReviewEntity(String username, String product, int rating, String comment, Instant date, List<String> tags) {
+    public ReviewDTO(String id, String username, String product, int rating, String comment, Instant date, String tags) {
+        this.id = id;
         this.username = username;
         this.product = product;
         this.rating = rating;
@@ -31,6 +27,10 @@ public class ReviewEntity {
 
     public String getId() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getUsername() {
@@ -73,24 +73,24 @@ public class ReviewEntity {
         this.date = date;
     }
 
-    public List<String> getTags() {
+    public String getTags() {
         return tags;
     }
 
-    public void setTags(List<String> tags) {
+    public void setTags(String tags) {
         this.tags = tags;
     }
 
     @Override
     public String toString() {
-        return "ReviewEntity{" +
+        return "ReviewDTO{" +
                 "id='" + id + '\'' +
                 ", username='" + username + '\'' +
                 ", product='" + product + '\'' +
                 ", rating=" + rating +
                 ", comment='" + comment + '\'' +
                 ", date=" + date +
-                ", tags=" + tags +
+                ", tags='" + tags + '\'' +
                 '}';
     }
 }
