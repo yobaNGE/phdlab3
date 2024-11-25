@@ -12,4 +12,5 @@ public interface ReviewRepository extends MongoRepository<ReviewEntity, String> 
     Optional<ReviewEntity> findById(String id);
     List<ReviewEntity> findAll();
     Page<ReviewEntity> findAll(Pageable pageable);
+    Page<ReviewEntity> findAllByProductContainingIgnoreCase(String product, Pageable pageable);
 }

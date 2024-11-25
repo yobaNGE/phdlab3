@@ -18,8 +18,6 @@ public class MapperConfig {
         // Define type map for Review -> ReviewDTO
         modelMapper.typeMap(ReviewEntity.class, ReviewDTO.class)
                 .addMappings(mapper ->
-                        mapper.map(ReviewEntity::getId, ReviewDTO::setId)) // Example explicit mapping
-                .addMappings(mapper ->
                         mapper.using(ctx -> {
                             List<String> tags = (List<String>) ctx.getSource();
                             return tags == null ? null : String.join(", ", tags);

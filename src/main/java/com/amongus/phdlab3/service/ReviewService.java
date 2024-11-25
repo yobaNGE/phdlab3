@@ -11,4 +11,5 @@ public interface ReviewService {
     public ResponseEntity<?> edit(ReviewDTO reviewEntity);
     public ResponseEntity<?> deleteById(String id);
     public ResponseEntity<?> create(ReviewDTO reviewEntity);
+    public ResponseEntity<?> find(String name, Pageable pageable);
 }

@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
@@ -63,4 +65,14 @@ public class ReviewServiceImpl implements ReviewService {
         return new ResponseEntity(reviewEntity, HttpStatus.CREATED);
     }
 
+    @Override
+    public ResponseEntity<?> find(String name, Pageable pageable) {
+        Page<ReviewEntity> reviewEntities = reviewRepository.findAllByProductContainingIgnoreCase(name,pageable);
+        System.out.println(reviewEntities);
+        List<ReviewDTO> reviewDTOS = reviewEntities.getContent().stream()
+                .map(reviewEntity -> modelMapper.map(reviewEntity, ReviewDTO.class))
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(reviewDTOS, HttpStatus.OK);
+    }
 }

@@ -17,26 +17,32 @@ public class ReviewController {
     public ReviewController(ReviewService reviewService) {
         this.reviewService = reviewService;
     }
-    @GetMapping("/get")
-    public ResponseEntity<?> getReview(@RequestParam("id") String id){
+    @GetMapping("/get/{id}")
+    public ResponseEntity<?> getReview(@PathVariable("id") String id){
         return reviewService.getById(id);
     }
-    @GetMapping("/getAll")
+    @GetMapping("/get")
     public ResponseEntity<?> getAllReviews(@RequestParam(value = "offset", defaultValue = "0") Integer offset,
                                            @RequestParam(value = "limit", defaultValue = "10") Integer limit){
 
         return reviewService.getAll(PageRequest.of(offset,limit));
     }
-    @PostMapping("/create")
+    @PostMapping("/get")
     public ResponseEntity<?> addReview(@RequestBody ReviewDTO reviewDTO){
         return reviewService.create(reviewDTO);
     }
-    @PutMapping("/update")
+    @PutMapping("/get/{id}")
     public ResponseEntity<?> editReview(@RequestBody ReviewDTO reviewDTO){
         return reviewService.edit(reviewDTO);
     }
-    @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteReview(@RequestParam("id") String id){
+    @DeleteMapping("/get/{id}")
+    public ResponseEntity<?> deleteReview(@PathVariable("id") String id){
         return reviewService.deleteById(id);
+    }
+    @GetMapping("/find")
+    public ResponseEntity<?> find(@RequestParam(value = "offset", defaultValue = "0") Integer offset,
+                                  @RequestParam(value = "limit", defaultValue = "10") Integer limit,
+                                  @RequestParam(value = "name", defaultValue = "nuuuf") String name){
+        return reviewService.find(name, PageRequest.of(offset,limit));
     }
 }
