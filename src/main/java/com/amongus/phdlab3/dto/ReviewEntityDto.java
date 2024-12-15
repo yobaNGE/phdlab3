@@ -1,9 +1,8 @@
 package com.amongus.phdlab3.dto;
 
 import java.time.Instant;
-import java.util.List;
 
-public class ReviewDTO {
+public class ReviewEntityDto {
     private String id;
     private String username;
     private String product;
@@ -12,10 +11,10 @@ public class ReviewDTO {
     private Instant date;
     private String tags;
 
-    protected ReviewDTO() {
+    protected ReviewEntityDto() {
     }
 
-    public ReviewDTO(String id, String username, String product, int rating, String comment, Instant date, String tags) {
+    public ReviewEntityDto(String id, String username, String product, int rating, String comment, Instant date, String tags) {
         this.id = id;
         this.username = username;
         this.product = product;

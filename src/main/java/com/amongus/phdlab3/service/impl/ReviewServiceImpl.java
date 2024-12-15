@@ -1,10 +1,13 @@
 package com.amongus.phdlab3.service.impl;
 
-import com.amongus.phdlab3.dto.ReviewDTO;
+import com.amongus.phdlab3.dto.ReviewEntityDto;
+import com.amongus.phdlab3.dto.ReviewPage;
 import com.amongus.phdlab3.entity.ReviewEntity;
 import com.amongus.phdlab3.repository.ReviewRepository;
 import com.amongus.phdlab3.service.ReviewService;
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -26,20 +29,28 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public ResponseEntity<?> getById(String id) {
         ReviewEntity reviewEntity = reviewRepository.findById(id).orElseThrow();
-        ReviewDTO reviewDTO = modelMapper.map(reviewEntity, ReviewDTO.class);
+        ReviewEntityDto reviewDTO = modelMapper.map(reviewEntity, ReviewEntityDto.class);
         return new ResponseEntity(reviewDTO, HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<?> getAll(Pageable pageable) {
+    @Cacheable("page")
+    public ReviewPage getAll(Pageable pageable) {
         Page<ReviewEntity> reviewEntities = reviewRepository.findAll(pageable);
-        return new ResponseEntity(reviewEntities, HttpStatus.OK);
+        return new ReviewPage(
+                reviewEntities.getContent(),
+                reviewEntities.getNumber(),
+                reviewEntities.getSize(),
+                reviewEntities.getTotalElements(),
+                reviewEntities.getTotalPages()
+        );
     }
 
     @Override
-    public ResponseEntity<?> edit(ReviewDTO reviewDTO) {
-        ReviewEntity review = reviewRepository.findById(reviewDTO.getId()).orElseThrow();
-        ReviewEntity review1 = modelMapper.map(reviewDTO, ReviewEntity.class);
+    @CacheEvict(value = "page")
+    public ResponseEntity<?> edit(ReviewEntityDto reviewEntityDto) {
+        ReviewEntity review = reviewRepository.findById(reviewEntityDto.getId()).orElseThrow();
+        ReviewEntity review1 = modelMapper.map(reviewEntityDto, ReviewEntity.class);
         review.setUsername(review1.getUsername());
         review.setProduct(review1.getProduct());
         review.setRating(review1.getRating());
@@ -51,13 +62,15 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    @CacheEvict(value = "page")
     public ResponseEntity<?> deleteById(String id) {
         reviewRepository.deleteById(id);
         return new ResponseEntity("placeholder", HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<?> create(ReviewDTO reviewDTO) {
+    @CacheEvict(value = "page")
+    public ResponseEntity<?> create(ReviewEntityDto reviewDTO) {
         System.out.println(reviewDTO);
         ReviewEntity reviewEntity = modelMapper.map(reviewDTO, ReviewEntity.class);
         System.out.println(reviewEntity);
@@ -66,11 +79,12 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    @Cacheable("page")
     public ResponseEntity<?> find(String name, Pageable pageable) {
         Page<ReviewEntity> reviewEntities = reviewRepository.findAllByProductContainingIgnoreCase(name,pageable);
         System.out.println(reviewEntities);
-        List<ReviewDTO> reviewDTOS = reviewEntities.getContent().stream()
-                .map(reviewEntity -> modelMapper.map(reviewEntity, ReviewDTO.class))
+        List<ReviewEntityDto> reviewDTOS = reviewEntities.getContent().stream()
+                .map(reviewEntity -> modelMapper.map(reviewEntity, ReviewEntityDto.class))
                 .collect(Collectors.toList());
 
         return new ResponseEntity<>(reviewDTOS, HttpStatus.OK);

@@ -16,7 +16,6 @@ public class ReviewEntity {
     private String comment;
     private Instant date;
     private List<String> tags;
-// поиск по имени продуктам
     protected ReviewEntity() {
     }
 

@@ -1,12 +1,11 @@
 package com.amongus.phdlab3.controller;
 
-import com.amongus.phdlab3.dto.ReviewDTO;
-import com.amongus.phdlab3.entity.ReviewEntity;
+import com.amongus.phdlab3.dto.ReviewEntityDto;
 import com.amongus.phdlab3.service.ReviewService;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.service.annotation.DeleteExchange;
 
 @RestController
 @RequestMapping("/review")
@@ -25,15 +24,15 @@ public class ReviewController {
     public ResponseEntity<?> getAllReviews(@RequestParam(value = "offset", defaultValue = "0") Integer offset,
                                            @RequestParam(value = "limit", defaultValue = "10") Integer limit){
 
-        return reviewService.getAll(PageRequest.of(offset,limit));
+        return new ResponseEntity<>(reviewService.getAll(PageRequest.of(offset,limit)), HttpStatus.OK);
     }
     @PostMapping("/get")
-    public ResponseEntity<?> addReview(@RequestBody ReviewDTO reviewDTO){
-        return reviewService.create(reviewDTO);
+    public ResponseEntity<?> addReview(@RequestBody ReviewEntityDto reviewEntityDto){
+        return reviewService.create(reviewEntityDto);
     }
     @PutMapping("/get/{id}")
-    public ResponseEntity<?> editReview(@RequestBody ReviewDTO reviewDTO){
-        return reviewService.edit(reviewDTO);
+    public ResponseEntity<?> editReview(@RequestBody ReviewEntityDto reviewEntityDto){
+        return reviewService.edit(reviewEntityDto);
     }
     @DeleteMapping("/get/{id}")
     public ResponseEntity<?> deleteReview(@PathVariable("id") String id){
