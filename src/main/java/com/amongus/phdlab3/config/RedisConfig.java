@@ -16,8 +16,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.time.Duration;
 
-@Configuration
-@EnableCaching
+//@Configuration
+//@EnableCaching
 public class RedisConfig {
 
     @Bean
